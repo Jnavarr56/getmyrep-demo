@@ -2,12 +2,14 @@
   "name": "getmyrep-demo",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "api/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec babel-node lib/index.js",
-    "build": "babel lib -d dist ",
-    "start": "npm run build && node dist/index.js"
+    "test": "jest --maxWorkers=1",
+    "test:watch": "jest --watchAll --maxWorkers=1",
+    "dev": " NODE_ENV=development nodemon --exec babel-node api/app.js",
+    "clean": "rimraf dist",
+    "build": "babel api --out-dir dist",
+    "start": "npm run clean && npm run build && NODE_ENV=production node dist/app.js"
   },
   "keywords": [],
   "author": "",
@@ -18,7 +20,11 @@
     "@babel/node": "^7.12.1",
     "@babel/plugin-transform-runtime": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
-    "nodemon": "^2.0.6"
+    "babel-jest": "^26.6.1",
+    "jest": "^26.6.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.6",
+    "supertest": "^6.0.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.12.1",
@@ -26,6 +32,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "query-string": "^6.13.6",
-    "request-ip": "^2.1.3"
+    "request-ip": "^2.1.3",
+    "rimraf": "^3.0.2"
   }
 }
