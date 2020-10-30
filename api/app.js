@@ -3,8 +3,6 @@ import morgan from "morgan";
 import requestIp from "request-ip";
 import routes from "./routes";
 
-import fetchReverseGeocode from "./utils/fetchReverseGeocode";
-
 const { PORT = 3000, NODE_ENV } = process.env;
 const LOG_NON_TEST_OUTPUT = NODE_ENV !== "test";
 const LOG_DEV_OUTPUT = NODE_ENV === "development";
