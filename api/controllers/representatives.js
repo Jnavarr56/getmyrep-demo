@@ -1,6 +1,6 @@
 import fetchReps from "../services/address-representatives";
 
-export default async (request, response) => {
+export const get = async (request, response) => {
   const { address } = request.query;
 
   if (!address) {

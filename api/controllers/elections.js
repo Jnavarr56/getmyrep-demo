@@ -1,6 +1,6 @@
 import fetchElections from "../services/address-elections";
 
-export default async (request, response) => {
+export const get = async (request, response) => {
   const { address } = request.query;
   if (!address) {
     return response.status(400).send("Invalid address");

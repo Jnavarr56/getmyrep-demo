@@ -1,7 +1,7 @@
 import axios from "axios";
 import queryString from "query-string";
 
-export default (baseUrl, queryParams) => {
+export default async (baseUrl, queryParams) => {
   const requestUrl = queryString.stringifyUrl({
     url: baseUrl,
     query: { ...queryParams },
