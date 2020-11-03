@@ -6,10 +6,10 @@
   "scripts": {
     "test": "jest --maxWorkers=1",
     "test:watch": "jest --watchAll --maxWorkers=1",
-    "dev": " NODE_ENV=development nodemon --exec babel-node api/app.js",
+    "dev": "nodemon --exec babel-node api/app.js",
     "clean": "rimraf dist",
     "build": "babel api --out-dir dist",
-    "start": "npm run clean && npm run build && NODE_ENV=production node dist/app.js"
+    "start": "npm run clean && npm run build && node dist/app.js"
   },
   "keywords": [],
   "author": "",
@@ -29,9 +29,10 @@
   "dependencies": {
     "@babel/runtime": "^7.12.1",
     "axios": "^0.21.0",
-    "dotenv": "^8.2.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "query-string": "^6.13.6",
+    "redis": "^3.0.2",
     "rimraf": "^3.0.2"
   }
 }

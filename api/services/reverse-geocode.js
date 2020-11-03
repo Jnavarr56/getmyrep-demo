@@ -1,10 +1,5 @@
-import * as dotenv from "dotenv";
 import request from "../utils/generate-get-request";
-import { GOOGLE_GEOCODE_API_URL } from "../config/vars";
-
-dotenv.config();
-
-const { GOOGLE_API_KEY } = process.env;
+import { GOOGLE_GEOCODE_API_URL, GOOGLE_API_KEY } from "../config/vars";
 
 export default async (lat, lng) => {
   const params = {
@@ -13,7 +8,9 @@ export default async (lat, lng) => {
   };
 
   const pendingRequest = request(GOOGLE_GEOCODE_API_URL, params);
-  const pendingAddresses = pendingRequest.then(filterValidAddresses);
+  const pendingAddresses = pendingRequest.then((response) => {
+    return filterValidAddresses(response.results);
+  });
   return pendingAddresses;
 };
 

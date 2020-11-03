@@ -1,0 +1,15 @@
+# Git
+.git
+.gitignore
+
+# Dependencies
+node_modules/
+  
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed

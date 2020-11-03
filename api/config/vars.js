@@ -8,3 +8,4 @@ export const GOOGLE_REPS_API_URL =
   "https://www.googleapis.com/civicinfo/v2/representatives";
 export const GOOGLE_ELECTIONS_API_URL =
   "https://www.googleapis.com/civicinfo/v2/voterinfo";
+export const { GOOGLE_API_KEY } = process.env;

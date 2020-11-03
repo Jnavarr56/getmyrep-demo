@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  getmyrep-demo-cache:
+    container_name: "getmyrep-demo-cache"
+    image: "redis:6.0.9"
+    expose:
+      - "6379"
+  getmyrep-demo-api:
+    container_name: "getmyrep-demo-api"
+    build: .
+    command: "npm run dev"
+    environment:
+      - "PORT=3000"
+      - "NODE_ENV=development"
+      - "GOOGLE_API_KEY=${GOOGLE_API_KEY}"
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - "getmyrep-demo-cache"

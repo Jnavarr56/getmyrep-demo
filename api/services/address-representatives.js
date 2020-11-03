@@ -1,10 +1,5 @@
-import * as dotenv from "dotenv";
 import request from "../utils/generate-get-request";
-import { GOOGLE_REPS_API_URL } from "../config/vars";
-
-dotenv.config();
-
-const { GOOGLE_API_KEY } = process.env;
+import { GOOGLE_REPS_API_URL, GOOGLE_API_KEY } from "../config/vars";
 
 export default async (address) => {
   const params = { address, key: GOOGLE_API_KEY };
