@@ -11,6 +11,7 @@ services:
     command: "npm run start"
     environment:
       - "PORT=3000"
+      -- "REDIS_URL=redis://getmyrep-demo-cache:6379"
       - "NODE_ENV=production"
       - "GOOGLE_API_KEY=${GOOGLE_API_KEY}"
     ports:

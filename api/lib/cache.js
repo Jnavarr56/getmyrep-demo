@@ -1,33 +1,43 @@
 import redis from "redis";
+import { CACHE_DURATION_SECS, IN_DEVELOPMENT } from "../config/vars";
 
-const { REDIS_PORT, REDIS_URL, NODE_ENV } = process.env;
+const { REDIS_URL } = process.env;
 
-// Shift url to env var and find way to transpile
-// this to allow static properties.
-// https://babeljs.io/docs/en/babel-plugin-proposal-class-properties
-
-const holder = {};
 export default class RedisCacheManager {
-  constructor() {}
-  //   static client = null;
+  static CLIENT = null;
+  static REDIS_SET_MODE = "EX";
+
   static async initializeConnection() {
-    const redisClient = redis.createClient("redis://getmyrep-demo-cache:6379");
-    holder.client = redisClient;
-    return new Promise((resolve) => {
-      redisClient.on("connect", () => {
-        if (NODE_ENV === "development") {
-          console.log("Redis connection initialized!");
-          resolve();
+    this.CLIENT = redis.createClient(REDIS_URL);
+    return new Promise((resolve) => this.CLIENT.on("ready", resolve));
+  }
+
+  static async set(key, value) {
+    return new Promise((resolve, reject) => {
+      this.CLIENT.set(
+        key,
+        JSON.stringify(value),
+        this.REDIS_SET_MODE,
+        CACHE_DURATION_SECS,
+        (error, reply) => {
+          if (error) reject(error);
+          if (IN_DEVELOPMENT) console.log("setting in cache");
+          resolve(reply);
         }
-      });
+      );
     });
   }
 
-  static get client() {
-    if (!holder.client) {
-      throw new Error("Client not initialized");
-    }
-
-    return holder.client;
+  static async get(key) {
+    return new Promise((resolve, reject) => {
+      this.CLIENT.get(key, (error, reply) => {
+        if (error) reject(error);
+        if (reply !== null) {
+          reply = JSON.parse(reply);
+          if (IN_DEVELOPMENT) console.log("fetching from cache");
+        }
+        resolve(reply);
+      });
+    });
   }
 }

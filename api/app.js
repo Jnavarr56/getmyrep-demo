@@ -3,10 +3,9 @@ import cors from "cors";
 import morgan from "morgan";
 import routes from "./routes";
 import RedisCacheManager from "./lib/cache";
+import { IN_DEVELOPMENT, IN_TEST } from "./config/vars";
 
 const { NODE_ENV, PORT } = process.env;
-
-const IN_DEVELOPMENT = NODE_ENV === "development";
 
 const server = express();
 
@@ -23,9 +22,11 @@ server.use(loggingMiddleware);
 server.use(routes);
 
 RedisCacheManager.initializeConnection().then(() => {
+  if (!IN_TEST) console.log("Redis connection initialized");
   server.listen(PORT, () => {
-    if (NODE_ENV !== "test") {
-      console.log(`Running on port ${PORT}\nEnvironment: ${NODE_ENV}`);
+    if (!IN_TEST) {
+      console.log(`HTTP Server running on port ${PORT}`);
+      console.log(`Environment: ${NODE_ENV}`);
     }
   });
 });

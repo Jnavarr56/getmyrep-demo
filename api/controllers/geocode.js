@@ -1,4 +1,5 @@
 import reverseGeocode from "../services/reverse-geocode";
+import validateLatLng from "../lib/helpers/validate-lat-lng";
 
 export const get = async (request, response) => {
   const { lat, lng } = request.query;
@@ -10,9 +11,4 @@ export const get = async (request, response) => {
   const formattedResponse = { address_matches: addressMatches };
 
   response.status(200).send(formattedResponse);
-};
-
-const validateLatLng = (lat, lng) => {
-  const pattern = new RegExp("^-?([1-8]?[1-9]|[1-9]0)\\.{1}\\d{1,6}");
-  return pattern.test(lat) && pattern.test(lng);
 };

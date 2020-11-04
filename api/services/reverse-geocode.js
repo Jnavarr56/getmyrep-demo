@@ -1,32 +1,29 @@
 import request from "../utils/generate-get-request";
-import { GOOGLE_GEOCODE_API_URL, GOOGLE_API_KEY } from "../config/vars";
+import filterValidAddresses from "../lib/helpers/filter-valid-addresses";
+import RedisCacheManager from "../lib/cache";
+import {
+  GOOGLE_GEOCODE_API_URL,
+  GOOGLE_API_KEY,
+  IN_DEVELOPMENT,
+} from "../config/vars";
 
 export default async (lat, lng) => {
-  const params = {
-    latlng: `${lat},${lng}`,
-    key: GOOGLE_API_KEY,
-  };
+  const coordsAsStr = `${lat},${lng}`;
 
-  const pendingRequest = request(GOOGLE_GEOCODE_API_URL, params);
-  const pendingAddresses = pendingRequest.then((response) => {
-    return filterValidAddresses(response.results);
-  });
-  return pendingAddresses;
-};
+  const cacheKey = `geocode:${coordsAsStr}`;
+  const cachedResult = await RedisCacheManager.get(cacheKey);
+  if (cachedResult) return cachedResult;
 
-const filterValidAddresses = (addresses) => {
-  const validAddresses = addresses.reduce((valid, addressData) => {
-    const { types, formatted_address } = addressData;
+  if (IN_DEVELOPMENT) console.log("fetching from API");
+  const googleRequestParams = { latlng: coordsAsStr, key: GOOGLE_API_KEY };
+  const googleRequestResponse = await request(
+    GOOGLE_GEOCODE_API_URL,
+    googleRequestParams
+  );
+  const addressMatches = googleRequestResponse.results;
+  const validAddresses = filterValidAddresses(addressMatches);
 
-    for (const addressType of types) {
-      if (addressType === "street_address" || addressType === "premise") {
-        valid.push(formatted_address);
-        return valid;
-      }
-    }
-
-    return valid;
-  }, []);
+  await RedisCacheManager.set(cacheKey, validAddresses);
 
   return validAddresses;
 };
