@@ -1,5 +1,5 @@
 import reverseGeocode from "../services/reverse-geocode";
-import validateLatLng from "../lib/helpers/validate-lat-lng";
+import { validateLatLng } from "../lib/helpers/coords";
 
 export const get = async (request, response) => {
   const { lat, lng } = request.query;
